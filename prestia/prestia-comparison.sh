@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+
+INPUT_STATEMENT_FILE="$1"
+INPUT_EXPORT_FILE="$2"
+
+CONDENSED_STATEMENT_FILE=/tmp/condensed-og-statement
+CONDENSED_GNU_CASH_EXPORT_FILE=/tmp/condensed-gnu-cash-export
+
+rm $CONDENSED_STATEMENT_FILE
+rm $CONDENSED_GNU_CASH_EXPORT_FILE
+
+awk -f prestia-statement.awk "$INPUT_STATEMENT_FILE" | sort > $CONDENSED_STATEMENT_FILE
+awk -f gnu-cash-exporter.awk "$INPUT_EXPORT_FILE" | sort > $CONDENSED_GNU_CASH_EXPORT_FILE
+
+diff --color=auto $CONDENSED_STATEMENT_FILE $CONDENSED_GNU_CASH_EXPORT_FILE
